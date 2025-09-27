@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+pydantic-settings
+sqlalchemy[asyncio]
+aiosqlite
+asyncpg
+httpx
+loguru
+websockets
