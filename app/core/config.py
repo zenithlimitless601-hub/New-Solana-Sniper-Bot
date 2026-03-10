@@ -1,9 +1,19 @@
+"""Application configuration via environment variables."""
+
 from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
+    """Application settings loaded from environment variables and .env file.
+
+    Supports SQLite (aiosqlite) and PostgreSQL (asyncpg) backends,
+    configurable trading strategy, and optional Pump.fun real-time listener.
+    """
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
     app_name: str = "Solana Sniper Bot"
     database_url: str = "sqlite+aiosqlite:///./data.db"
     rpc_url: str | None = None
@@ -26,7 +36,7 @@ class Settings(BaseSettings):
     log_to_file: bool = False
     log_file: str | None = None
 
-    def model_post_init(self, __context: dict) -> None:
+    def model_post_init(self, __context: dict) -> None:  # type: ignore[override]
         tpm_csv = self._read_env_list("TAKE_PROFIT_MULTIPLIERS_CSV")
         if tpm_csv:
             self.take_profit_multipliers = [float(x) for x in tpm_csv]
@@ -34,6 +44,7 @@ class Settings(BaseSettings):
     @staticmethod
     def _read_env_list(key: str) -> list[str] | None:
         import os
+
         v = os.getenv(key)
         if not v:
             return None
@@ -42,4 +53,5 @@ class Settings(BaseSettings):
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
+    """Return cached application settings singleton."""
     return Settings()

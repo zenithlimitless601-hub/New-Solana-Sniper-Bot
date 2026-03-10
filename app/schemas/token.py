@@ -1,7 +1,11 @@
+"""Token request/response schemas."""
+
 from pydantic import BaseModel, Field
 
 
 class TokenIn(BaseModel):
+    """Input schema for submitting a token for analysis or trading."""
+
     address: str
     symbol: str | None = None
     name: str | None = None
@@ -11,4 +15,6 @@ class TokenIn(BaseModel):
 
 
 class TokenOut(TokenIn):
+    """Output schema with database ID included."""
+
     id: int = Field(...)

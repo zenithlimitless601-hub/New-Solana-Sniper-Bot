@@ -1,8 +1,13 @@
+"""Trade response schemas."""
+
 from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
 class TradeOut(BaseModel):
+    """Single trade record with entry/exit data and PnL."""
+
     id: int
     token_id: int
     mode: str
@@ -17,5 +22,7 @@ class TradeOut(BaseModel):
 
 
 class TradeListOut(BaseModel):
+    """Paginated list of trades."""
+
     items: list[TradeOut]
     total: int = Field(...)

@@ -1,3 +1,9 @@
+"""Standalone WebSocket monitor for the real-time token feed.
+
+Usage:
+    python ws_monitor.py
+"""
+
 import asyncio
 import json
 from typing import Any
@@ -7,12 +13,17 @@ from websockets.exceptions import ConnectionClosed
 
 
 class WSMonitor:
-    def __init__(self, url: str, retry_base: float = 1.0, retry_max: float = 30.0) -> None:
+    """Connects to the bot WS endpoint and prints new token events."""
+
+    def __init__(
+        self, url: str, retry_base: float = 1.0, retry_max: float = 30.0
+    ) -> None:
         self.url = url
         self.retry_base = retry_base
         self.retry_max = retry_max
 
     async def run(self) -> None:
+        """Run the monitor with exponential backoff reconnect."""
         delay = self.retry_base
         while True:
             try:
@@ -35,7 +46,8 @@ class WSMonitor:
                 msg = await ws.recv()
                 self._handle_message(msg)
 
-    def _handle_message(self, msg: str) -> None:
+    @staticmethod
+    def _handle_message(msg: str) -> None:
         evt: dict[str, Any] = json.loads(msg)
         if evt.get("event") == "new_token":
             data = evt.get("data", {})
