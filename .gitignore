@@ -9,6 +9,7 @@ venv/
 .dist/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 .coverage*
 htmlcov/
 .DS_Store
@@ -16,3 +17,7 @@ htmlcov/
 .vscode/
 .data/
 data.db
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
